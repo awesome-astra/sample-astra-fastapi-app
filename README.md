@@ -1,1 +1,2 @@
-# sample-astra-fastapi-app
+# Sample Astra DB FastAPI app
+
