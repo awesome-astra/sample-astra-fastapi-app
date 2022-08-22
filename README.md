@@ -68,6 +68,13 @@ curl -s -X POST \
   -d '{"genus":"Philaeus", "species":"chrysops", "image_url":"https://imgur.com/F66x0Pt", "size_cm":0.12, "sightings":2, "taxonomy": ["Arthropoda","Arachnida","Aranea","Salticidae"]}' \
   -H 'Content-Type: application/json' \
   | jq
+
+curl -s \
+  localhost:8000/plant/Plantago \
+  -H 'Content-Type: application/json' \
+  | jq
+# by trying with `curl -i -s ...` and no jq piping one can
+# see that this has "Transfer-Encoding: chunked".
 ```
 
 ### Remarks
@@ -83,5 +90,7 @@ session to all endpoints that need it (the `Depends(...)` argument
 to the endpoint functions). Note that an async function `yield`ing the session
 is introduced to comply with the function (async generator) expected by
 `Depends`.
+
+Streaming (coming soon).
 
 ### See also

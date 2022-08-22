@@ -1,7 +1,11 @@
+'''
+Don't mind this code too much, it's there just to create/populate the tables.
+'''
+
 from db_connect import get_session
+from cassandra.query import BatchStatement
 
-
-INIT_CQL = '''
+INIT_CQL_A = '''
 CREATE TABLE IF NOT EXISTS animals (
   genus           TEXT,
   species         TEXT,
@@ -12,6 +16,16 @@ CREATE TABLE IF NOT EXISTS animals (
   PRIMARY KEY ((genus), species)
 );
 '''
+
+INIT_CQL_P = '''
+CREATE TABLE IF NOT EXISTS plants (
+  genus           TEXT,
+  species         TEXT,
+  sightings       INT,
+  PRIMARY KEY ((genus), species)
+);
+'''
+
 POPULATE_CQL_0 = '''
 INSERT INTO animals (
   genus,
@@ -29,6 +43,7 @@ INSERT INTO animals (
   ['Arthropoda', 'Insecta', 'Lepidoptera', 'Nymphalidae']
 );
 '''
+
 POPULATE_CQL_1 = '''
 INSERT INTO animals (
   genus,
@@ -46,6 +61,7 @@ INSERT INTO animals (
   ['Arthropoda', 'Insecta', 'Lepidoptera', 'Nymphalidae']
 );
 '''
+
 POPULATE_CQL_2 = '''
 INSERT INTO animals (
   genus,
@@ -64,15 +80,116 @@ INSERT INTO animals (
 );
 '''
 
+FLEAWORS_SPECIES = [
+    'afra',
+    'africana',
+    'aitchisonii',
+    'alpina',
+    'amplexicaulis',
+    'arborescens',
+    'arenaria',
+    'argentea',
+    'aristata',
+    'asiatica',
+    'aucklandica',
+    'bigelovii',
+    'canescens',
+    'coreana',
+    'cordata',
+    'coronopus',
+    'cornuti',
+    'cretica',
+    'cynops',
+    'debilis',
+    'elongata',
+    'erecta',
+    'eriopoda',
+    'erosa',
+    'fernandezia',
+    'fischeri',
+    'gentianoides',
+    'glabrifolia',
+    'grayana',
+    'hawaiensis',
+    'hedleyi',
+    'helleri',
+    'heterophylla',
+    'hillebrandii',
+    'himalaica',
+    'holosteum',
+    'hookeriana',
+    'incisa',
+    'indica',
+    'krajinai',
+    'lagopus',
+    'lanceolata',
+    'lanigera',
+    'leiopetala',
+    'longissima',
+    'macrocarpa',
+    'major',
+    'maritima',
+    'maxima',
+    'media',
+    'melanochrous',
+    'moorei',
+    'musicola',
+    'nivalis',
+    'nubicola',
+    'obconica',
+    'ovata',
+    'pachyphylla',
+    'palmata',
+    'patagonica',
+    'polysperma',
+    'princeps',
+    'purshii',
+    'pusilla',
+    'psyllium',
+    'raoulii',
+    'rapensis',
+    'remota',
+    'reniformis',
+    'rhodosperma',
+    'rigida',
+    'robusta',
+    'rugelii',
+    'rupicola',
+    'schneideri',
+    'sempervirens',
+    'sparsiflora',
+    'spathulata',
+    'subnuda',
+    'tanalensis',
+    'taqueti',
+    'tenuiflora',
+    'triandra',
+    'triantha',
+    'tweedyi',
+    'virginica',
+    'winteri',
+    'wrightiana',
+]
+
+MINIMAL_INSERT_CQL = 'INSERT INTO plants (genus, species, sightings) VALUES (?, ?, ?);'
 
 def init_db():
     session = get_session()
-    print("[init_db] Running init scripts")
-    session.execute(INIT_CQL)
+    print('[init_db] Running init scripts')
+    session.execute(INIT_CQL_A)
     session.execute(POPULATE_CQL_0)
     session.execute(POPULATE_CQL_1)
     session.execute(POPULATE_CQL_2)
-    print("[init_db] Init script finished")
+    #
+    session.execute(INIT_CQL_P)
+    minimal_insert = session.prepare(MINIMAL_INSERT_CQL)
+    batch = BatchStatement() #consistency_level=ConsistencyLevel.QUORUM)
+    for idx, species in enumerate(FLEAWORS_SPECIES):
+        # we jus scramble the numbers
+        batch.add(minimal_insert, ('Plantago', species, 1 + (idx) % 5 + (idx + 5) % 3))
+    session.execute(batch)
+    #
+    print('[init_db] Init script finished')
 
 
 if __name__ == '__main__':

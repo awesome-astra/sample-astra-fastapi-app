@@ -8,3 +8,8 @@ class Animal(BaseModel):
     size_cm: float
     sightings: int
     taxonomy: List[str]
+
+class Plant(BaseModel):
+    genus: str
+    species: str
+    sightings: int

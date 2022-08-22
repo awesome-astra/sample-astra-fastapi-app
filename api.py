@@ -1,15 +1,22 @@
 from fastapi import FastAPI, Depends, Response, status
+from fastapi.responses import StreamingResponse
 
-from storage.db_io import store_animal, retrieve_animal, retrieve_animals_by_genus
+from storage.db_io import (
+    store_animal,
+    retrieve_animal,
+    retrieve_animals_by_genus,
+    generator_retrieve_plant_by_genus,
+)
 from utils.db_dependency import g_get_session
 from utils.models import Animal
+from utils.streaming import format_streaming_response
 
 app = FastAPI()
 
 
 @app.get('/animal/{genus}/{species}')
 async def get_animal(genus, species, response: Response, session=Depends(g_get_session)):
-    animal = await retrieve_animal(session, genus, species)
+    animal = retrieve_animal(session, genus, species)
     if animal:
         return animal
     else:
@@ -19,11 +26,20 @@ async def get_animal(genus, species, response: Response, session=Depends(g_get_s
 
 @app.get('/animal/{genus}')
 async def get_animals(genus, session=Depends(g_get_session)):
-    animals = await retrieve_animals_by_genus(session, genus)
+    animals = retrieve_animals_by_genus(session, genus)
     return animals
 
 
 @app.post('/animal', status_code=status.HTTP_200_OK)
 async def post_animal(animal: Animal, session=Depends(g_get_session)):
-    await store_animal(session, animal)
+    store_animal(session, animal)
     return {"inserted": True}
+
+
+@app.get('/plant/{genus}')
+async def get_plant(genus, session=Depends(g_get_session)):
+    plants = generator_retrieve_plant_by_genus(session, genus)
+    return StreamingResponse(
+        format_streaming_response(plants),
+        media_type='application/json',
+    )
