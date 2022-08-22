@@ -23,7 +23,7 @@ INSERT INTO animals (
 ) VALUES (
   'Vanessa',
   'cardui',
-  'https://upload.wikimedia.org/wikipedia/commons/c/c8/0_Belle-dame_%28Vanessa_cardui%29_-_Echinacea_purpurea_-_Havr%C3%A9_%283%29.jpg',
+  'https://imgur.com/WrPsKkD',
   5.5,
   12,
   ['Arthropoda', 'Insecta', 'Lepidoptera', 'Nymphalidae']
@@ -40,7 +40,7 @@ INSERT INTO animals (
 ) VALUES (
   'Vanessa',
   'atalanta',
-  'https://upload.wikimedia.org/wikipedia/commons/9/9d/Red_admiral_%28Vanessa_atalanta%29_Hungary.jpg',
+  'https://imgur.com/2fSEnt1',
   4.8,
   43,
   ['Arthropoda', 'Insecta', 'Lepidoptera', 'Nymphalidae']
@@ -57,7 +57,7 @@ INSERT INTO animals (
 ) VALUES (
   'Saitis',
   'barbipes',
-  'https://upload.wikimedia.org/wikipedia/commons/f/fe/Saitis_barbipes_Barcelona_05.jpg',
+  'https://imgur.com/coVy27e',
   0.6,
   4,
   ['Arthropoda', 'Arachnida', 'Aranea', 'Salticidae']

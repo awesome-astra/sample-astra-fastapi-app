@@ -36,7 +36,7 @@ you can simply launch the provided initialization script once:
 python storage/db_initialize.py
 ```
 
-> This step, which will also test the connection to Astra DB,
+> This step, which will also serve as test of the connection to Astra DB,
 > has the sole purpose of making this demo application self-contained:
 > in a production setup, you'll probably want to
 > handle schema changes in a more controlled way.
@@ -65,7 +65,7 @@ curl -s \
 
 curl -s -X POST \
   localhost:8000/animal \
-  -d '{"genus":"Philaeus", "species":"chrysops", "image_url":"https://upload.wikimedia.org/wikipedia/commons/5/53/Philaeus_chrisops_-_Segreto.jpg", "size_cm":0.12, "sightings":2, "taxonomy": ["Arthropoda","Arachnida","Aranea","Salticidae"]}' \
+  -d '{"genus":"Philaeus", "species":"chrysops", "image_url":"https://imgur.com/F66x0Pt", "size_cm":0.12, "sightings":2, "taxonomy": ["Arthropoda","Arachnida","Aranea","Salticidae"]}' \
   -H 'Content-Type: application/json' \
   | jq
 ```
@@ -76,10 +76,12 @@ The database session is handled as a process-wide singleton
 using a global cache, as per best practices with the Cassandra driver.
 
 Likewise, to optimize performance, a global cache of prepared statement
-is used throughout the API.
+is used throughout the API (more precisely, there is one such cache per each FastAPI worker process).
 
 Finally, here FastAPI's dependency mechanisms are used to provide the database
 session to all endpoints that need it (the `Depends(...)` argument
 to the endpoint functions). Note that an async function `yield`ing the session
 is introduced to comply with the function (async generator) expected by
 `Depends`.
+
+### See also
