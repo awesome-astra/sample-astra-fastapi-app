@@ -1,3 +1,7 @@
+"""
+Pydantic models representing the content of the database tables.
+"""
+
 from pydantic import BaseModel
 from typing import List
 

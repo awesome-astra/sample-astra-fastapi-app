@@ -83,7 +83,8 @@ The database session is handled as a process-wide singleton
 using a global cache, as per best practices with the Cassandra driver.
 
 Likewise, to optimize performance, a global cache of prepared statement
-is used throughout the API (more precisely, there is one such cache per each FastAPI worker process).
+is used throughout the API
+(more precisely, there is one such cache per each FastAPI worker process).
 
 Finally, here FastAPI's dependency mechanisms are used to provide the database
 session to all endpoints that need it (the `Depends(...)` argument
@@ -91,6 +92,15 @@ to the endpoint functions). Note that an async function `yield`ing the session
 is introduced to comply with the function (async generator) expected by
 `Depends`.
 
-Streaming (coming soon).
+In case your response is very long, the API endpoint function may want to
+return a `Chunked` response and construct it piece-by-piece as it fetches data
+from the database. More precisely, the Cassandra driver will handle DB-side
+pagination transparently and simply present the stream of results as an iterator;
+the API code, on the response-side, will stream the response piecewise using
+FastAPI's `StreamingResponse` object. See the `/plant/{genus}` endpoint for
+the implementation.
 
 ### See also
+
+<img src="images/awesome-astra.png?raw=true" align="left" width="40px"/>
+[Awesome Astra article about FastAPI](https://awesome-astra.github.io/docs/pages/develop/frameworks/fastapi/)

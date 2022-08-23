@@ -1,6 +1,7 @@
-'''
-Don't mind this code too much, it's there just to create/populate the tables.
-'''
+"""
+Don't mind this code too much, it's there just to create/populate the tables
+and make this sample app work on some data.
+"""
 
 from db_connect import get_session
 from cassandra.query import BatchStatement
@@ -171,7 +172,9 @@ FLEAWORS_SPECIES = [
     'wrightiana',
 ]
 
+
 MINIMAL_INSERT_CQL = 'INSERT INTO plants (genus, species, sightings) VALUES (?, ?, ?);'
+
 
 def init_db():
     session = get_session()
@@ -180,15 +183,15 @@ def init_db():
     session.execute(POPULATE_CQL_0)
     session.execute(POPULATE_CQL_1)
     session.execute(POPULATE_CQL_2)
-    #
+
     session.execute(INIT_CQL_P)
     minimal_insert = session.prepare(MINIMAL_INSERT_CQL)
-    batch = BatchStatement() #consistency_level=ConsistencyLevel.QUORUM)
+    batch = BatchStatement()
     for idx, species in enumerate(FLEAWORS_SPECIES):
-        # we jus scramble the numbers
+        # we just scramble the numbers for fun
         batch.add(minimal_insert, ('Plantago', species, 1 + (idx) % 5 + (idx + 5) % 3))
     session.execute(batch)
-    #
+
     print('[init_db] Init script finished')
 
 

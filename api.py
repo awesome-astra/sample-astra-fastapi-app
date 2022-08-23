@@ -1,3 +1,10 @@
+"""
+The main API code, with the endpoint function definitions.
+The only noteworthy thing here is how the database session
+is made available to all endpoint functions via the `Depends`
+injection idiom offered by FastAPI.
+"""
+
 from fastapi import FastAPI, Depends, Response, status
 from fastapi.responses import StreamingResponse
 
@@ -10,6 +17,7 @@ from storage.db_io import (
 from utils.db_dependency import g_get_session
 from utils.models import Animal
 from utils.streaming import format_streaming_response
+
 
 app = FastAPI()
 
