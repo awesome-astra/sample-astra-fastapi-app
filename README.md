@@ -103,4 +103,5 @@ the implementation.
 ### See also
 
 <img src="images/awesome-astra.png?raw=true" align="left" width="40px"/>
+
 [Awesome Astra article about FastAPI](https://awesome-astra.github.io/docs/pages/develop/frameworks/fastapi/)
