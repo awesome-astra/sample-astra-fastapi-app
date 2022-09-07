@@ -81,7 +81,7 @@ INSERT INTO animals (
 );
 '''
 
-FLEAWORS_SPECIES = [
+PLANTAIN_SPECIES = [
     'afra',
     'africana',
     'aitchisonii',
@@ -187,7 +187,7 @@ def init_db():
     session.execute(INIT_CQL_P)
     minimal_insert = session.prepare(MINIMAL_INSERT_CQL)
     batch = BatchStatement()
-    for idx, species in enumerate(FLEAWORS_SPECIES):
+    for idx, species in enumerate(PLANTAIN_SPECIES):
         # we just scramble the numbers for fun
         batch.add(minimal_insert, ('Plantago', species, 1 + (idx) % 5 + (idx + 5) % 3))
     session.execute(batch)
